@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos - Mi Negocio</title>
+    <link rel="stylesheet" href="productos.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: #333;
+            color: white;
+        }
+
+        .top-back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            text-decoration: none;
+            background-color: #555;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background 0.3s ease-in-out;
+        }
+
+        .top-back-btn:hover {
+            background-color: #777;
+        }
+
+        .search-bar {
+            position: relative;
+            text-align: center;
+            margin: 20px;
+        }
+
+        .search-bar input {
+            padding: 10px 40px 10px 15px;
+            width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .search-bar .search-icon {
+            position: absolute;
+            top: 50%;
+            right: calc(50% - 150px);
+            transform: translateY(-50%);
+            background-color: #ddd;
+            border: none;
+            border-radius: 50%;
+            padding: 5px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: background 0.3s ease-in-out;
+        }
+
+        .search-bar .search-icon:hover {
+            background-color: #bbb;
+        }
+
+        .products {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .product-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            text-align: center;
+            width: 250px;
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .product-card img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .product-card h3 {
+            margin: 10px 0;
+            font-size: 1.2em;
+        }
+
+        .product-card p {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .back-btn {
+            display: block;
+            text-align: center;
+            margin: 20px auto;
+            text-decoration: none;
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            width: 120px;
+            transition: background 0.3s ease-in-out;
+        }
+
+        .back-btn:hover {
+            background-color: #555;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+        }
+
+        /* Animación de entrada */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Modal (ventana emergente) */
+        #imageModal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        #imageModal img {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 700px;
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <a href="pagina1.html" class="top-back-btn">Regresar</a>
+        <h1>Productos</h1>
+    </header>
+    <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Buscar productos..." oninput="filterProducts()"> 
+        <button class="search-icon" onclick="filterProducts()">&#128269;</button> 
+    </div>
+    <section class="products" id="productList">
+        <div class="product-card" onclick="openModal('imagen1.png')">
+            <img src="imagen1.png" alt="Producto 1">
+            <h3>Juego de Herramientas</h3>
+            <p>Tool set 104 piezas</p>
+        </div>
+        <div class="product-card" onclick="openModal('imagen2.png')">
+            <img src="imagen2.png" alt="Producto 2">
+            <h3>kit Básico</h3>
+            <p>kit de herramientas.</p>
+        </div>
+        <div class="product-card" onclick="openModal('imagen3.png')">
+            <img src="imagen3.png" alt="Producto 3">
+            <h3>Métrico, enchufes de 1/4 brocas</h3>
+            <p>Brocas y enchufes de accionamientos de 1/4.</p>
+        </div>
+        <div class="product-card" onclick="openModal('imagen4.png')">
+            <img src="imagen4.png" alt="Producto 4">
+            <h3>Karcher</h3>
+            <p>Al soltar el gatillo el motor se detiene automáticamente</p>
+        </div>
+        <div class="product-card" onclick="openModal('imagen5.png')">
+            <img src="imagen5.png" alt="Producto 5">
+            <h3>WORTURE - Juego de 246</h3>
+            <p>brocas de perforación y atornillado...</p>
+        </div>
+        <div class="product-card" onclick="openModal('imagen6.png')">
+            <img src="imagen6.png" alt="Producto 6">
+            <h3>Juego De Destornilladores Magnéticos Con Funda, 42 Piezas</h3>
+            <p>kit de herramientas, desarmadores con piezas para tener iman.</p>
+        </div>
+        <div class="product-card" onclick="openModal('imagen7.png')">
+            <img src="imagen7.png" alt="Producto 6">
+            <h3>Cable Cobre Condumex Calibre 12 Caja Con 100m Thw Vinanel     
+                (de diferente color)
+                <p>Cable de cobre Condumex calibre 12 caja con 100mts THW Vinanel
+
+                    Marca: Condumex
+                    Modelo: 078-CATHW12
+                    Tipo de cable: Unipolar
+                    Condición: Nuevo
+                    Colores: Azul, Blanco, Negro, Rojo, Verde
+                    Largo: 100 m.
+                    Calibre: 12 AWG.
+                    Tensión máxima: 600 V.
+                    Contenido: Un rollo</p>
+
+            </h3>
+        </div>
+            <div class="product-card" onclick="openModal('imagen8.png')">
+                <img src="imagen8.png" alt="Producto 8">
+                <h3>Taladro Inalámbrico 1/2 20v Acc Y Estuche Pretul TALI-20P2K Color Amarillo </h3>
+                <p>kit de herramientas, desarmadores con piezas para tener iman.</p>
+            </div>
+          
+        </div>
+    </section>
+    <a href="pagina1.html" class="back-btn">Regresar</a>
+    
+  
+    <p><span style="color: red;">!!SI NO ENCUENTRAS EL MATERIAL QUE BUSACAS COMUNICATE CON NOSOTROS, Y EL PRECIO PREGUNTA!!</span> </p>
+    <footer>
+        <p>&copy; 2024 Mi Negocio. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- Modal -->
+    <div id="imageModal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img id="modalImage" src="" alt="Imagen Ampliada">
+    </div>
+
+    <script>
+        function openModal(imageSrc) {
+            // Mostrar el modal y la imagen correspondiente
+            document.getElementById('modalImage').src = imageSrc;
+            document.getElementById('imageModal').style.display = "block";
+        }
+
+        function closeModal() {
+            // Ocultar el modal
+            document.getElementById('imageModal').style.display = "none";
+        }
+
+        // Normaliza texto eliminando acentos y pasando a minúsculas
+        function normalizeText(text) {
+            return text.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+        }
+
+        // Función para filtrar productos
+        function filterProducts() {
+            const searchInput = normalizeText(document.getElementById('searchInput').value);
+            const products = document.querySelectorAll('.product-card');
+
+            products.forEach(product => {
+                const productTitle = normalizeText(product.querySelector('h3').textContent);
+
+                if (productTitle.includes(searchInput)) {
+                    product.style.display = 'block';
+                    product.style.animation = 'fadeIn 0.6s ease-in-out forwards';
+                } else {
+                    product.style.animation = 'fadeOut 0.6s ease-in-out forwards';
+                    setTimeout(() => product.style.display = 'none', 600);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

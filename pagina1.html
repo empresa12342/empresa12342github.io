@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esfera y Animación Lateral</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            color: rgb(255, 255, 255);
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            opacity: 0; /* Inicia invisible */
+            animation: fadeIn 1s ease-in-out forwards; /* Animación de entrada */
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.9); /* Un ligero zoom inicial */
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1); /* Escala normal */
+            }
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: rgba(0, 0, 0, 0.4);
+            position: fixed;
+            top: 0;
+            width: 97%;
+            z-index: 10;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.7);
+        }
+
+        .navbar .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .navbar ul {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar ul li {
+            margin: 0 10px; /* Espacio entre los enlaces */
+        }
+
+        .navbar ul li a {
+            text-decoration: none;
+            color: rgb(255, 255, 255);
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .navbar ul li a:hover {
+            color: rgba(242, 242, 242, 0.8);
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            text-align: center;
+            margin-top: 20px;
+            position: relative;
+        }
+
+        .text h1 {
+            font-size: 3em;
+            margin: 0;
+            font-family: 'Georgia', serif;
+            color: #ffffff; /* Dorado elegante */
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .text p {
+            font-size: 1.5em;
+            margin-top: 15px;
+            font-family: 'Georgia', serif;
+            color: #FFFFFF;
+        }
+
+        canvas {
+            display: block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .location-message {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-size: 1em;
+            color: rgba(255, 255, 255, 0.7);
+            transform: translateY(0);
+            display: block;
+            opacity: 1;
+            transition: opacity 0.5s;
+        }
+
+        .location-message button {
+            background-color: #000;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+
+        .location-message button:hover {
+            background-color: gray;
+        }
+
+        @media (max-width: 768px) {
+            .navbar ul li {
+                margin: 0 5px;
+            }
+
+            .text h1 {
+                font-size: 2em;
+            }
+
+            .text p {
+                font-size: 1.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">DISTRIBUIDORA ELECTRICA</div>
+        <ul>
+            <li><a href="productos.html">Productos</a></li>
+            <li>
+                <a href="https://wa.me/7221224599?text=Hola,%20necesito%20información%20sobre%20sus%20productos." 
+                   target="_blank" 
+                   title="Escríbenos por WhatsApp">
+                   WhatsApp
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div class="text">
+            <h1>Si no encuentras un producto</h1>
+            <p>Comun&iacute;cate con nosotros y te ayudaremos.</p>
+        </div>
+        <canvas id="sphereCanvas"></canvas>
+    </div>
+
+    <!-- Mensaje de ubicación con botón siempre visible -->
+    <div class="location-message" id="locationMessage">
+        Ubicación
+        <button id="showMapButton">Ver ubicación</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById("sphereCanvas");
+        const ctx = canvas.getContext("2d");
+
+        let particles = [];
+        let radius;
+        let numParticles;
+        let particleSpeed = 2;
+
+        function adjustCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            radius = Math.min(canvas.width, canvas.height) / 3;
+            numParticles = canvas.width < 768 ? 1500 : 3000;
+
+            generateParticles();
+        }
+
+        window.addEventListener("resize", adjustCanvas);
+        adjustCanvas();
+
+        function generateParticles() {
+            particles = [];
+            for (let i = 0; i < numParticles; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const elevation = Math.acos((Math.random() * 2) - 1);
+                particles.push({
+                    x: radius * Math.sin(elevation) * Math.cos(angle),
+                    y: radius * Math.sin(elevation) * Math.sin(angle),
+                    z: radius * Math.cos(elevation),
+                    vx: (Math.random() - 0.5) * particleSpeed,
+                    vy: (Math.random() - 0.5) * particleSpeed,
+                    vz: (Math.random() - 0.5) * particleSpeed
+                });
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            particles.forEach((particle) => {
+                particle.x += particle.vx;
+                particle.y += particle.vy;
+                particle.z += particle.vz;
+
+                const distance = Math.sqrt(particle.x ** 2 + particle.y ** 2 + particle.z ** 2);
+                if (distance > radius) {
+                    const scale = radius / distance;
+                    particle.x *= scale;
+                    particle.y *= scale;
+                    particle.z *= scale;
+
+                    particle.vx *= -1;
+                    particle.vy *= -1;
+                    particle.vz *= -1;
+                }
+
+                const perspective = 800 / (800 - particle.z);
+                const screenX = (particle.x * perspective) + canvas.width / 2;
+                const screenY = (particle.y * perspective) + canvas.height / 2;
+
+                const size = (perspective - 0.5) * 1;
+
+                ctx.fillStyle = `rgba(255, 255, 255, ${perspective - 0.5})`;
+                ctx.beginPath();
+                ctx.arc(screenX, screenY, size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            requestAnimationFrame(draw);
+        }
+
+        draw();
+
+        const showMapButton = document.getElementById("showMapButton");
+        showMapButton.addEventListener("click", () => {
+            const locationUrl = "https://www.google.com/maps/@19.2711143,-99.5796167,3a,75y,292.69h,110.36t/data=!3m7!1e1!3m5!1sGsKYgNltmhjtT1zC10Otcg!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-20.356560977490474%26panoid%3DGsKYgNltmhjtT1zC10Otcg%26yaw%3D292.686631230108!7i16384!8i8192!5m1!1e1?hl=es&entry=ttu&g_ep=EgoyMDI0MTIxMS4wIKXMDSoASAFQAw%3D%3D";
+            window.open(locationUrl, "_blank");
+        });
+    </script>
+</body>
+</html>
